@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinFlow - Financial Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-wallet"></i>
+                <span>FinFlow</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="accounts">
+                    <i class="fas fa-university"></i>
+                    <span>Accounts</span>
+                </a>
+                <a href="#" class="nav-item" data-page="transactions">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="#" class="nav-item" data-page="transfer">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Transfer</span>
+                </a>
+                <a href="#" class="nav-item" data-page="budget">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Budget</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">JD</div>
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-email">john@example.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p class="date" id="current-date"></p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search transactions...">
+                    </div>
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div class="page-content active" id="page-dashboard">
+                <!-- Balance Cards -->
+                <section class="balance-section">
+                    <div class="balance-card total">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-label">Total Balance</span>
+                            <span class="card-value" id="total-balance">$24,580.00</span>
+                            <span class="card-change positive">
+                                <i class="fas fa-arrow-up"></i> +2.5% this month
+                            </span>
+                        </div>
+                    </div>
+                    <div class="balance-card income">
+                        <div class="card-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-label">Income</span>
+                            <span class="card-value" id="total-income">$8,450.00</span>
+                            <span class="card-change positive">
+                                <i class="fas fa-arrow-up"></i> +12% this month
+                            </span>
+                        </div>
+                    </div>
+                    <div class="balance-card expense">
+                        <div class="card-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-label">Expenses</span>
+                            <span class="card-value" id="total-expenses">$3,280.00</span>
+                            <span class="card-change negative">
+                                <i class="fas fa-arrow-up"></i> +8% this month
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts and Activity -->
+                <section class="charts-section">
+                    <div class="chart-card">
+                        <h3>Spending Overview</h3>
+                        <div class="chart-container">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="recent-transactions">
+                        <h3>Recent Transactions</h3>
+                        <div class="transaction-list" id="recent-transactions">
+                            <!-- Transactions will be populated by JS -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Transfer Page -->
+            <div class="page-content" id="page-transfer">
+                <div class="transfer-container">
+                    <div class="transfer-card">
+                        <h2>Send Money</h2>
+                        <form id="transfer-form">
+                            <div class="form-group">
+                                <label>From Account</label>
+                                <select id="from-account">
+                                    <option value="checking">Checking ****4521 - $12,450.00</option>
+                                    <option value="savings">Savings ****7832 - $8,130.00</option>
+                                    <option value="investment">Investment ****9012 - $4,000.00</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>To Account</label>
+                                <input type="text" id="to-account" placeholder="Enter recipient account number" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <div class="amount-input">
+                                    <span class="currency">$</span>
+                                    <input type="number" id="amount" placeholder="0.00" min="1" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Note (optional)</label>
+                                <input type="text" id="transfer-note" placeholder="What's this for?">
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send Money
+                            </button>
+                        </form>
+                    </div>
+                    <div class="quick-transfer">
+                        <h3>Quick Transfer</h3>
+                        <div class="quick-contacts" id="quick-contacts">
+                            <!-- Contacts populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Page -->
+            <div class="page-content" id="page-transactions">
+                <div class="transactions-container">
+                    <div class="filters">
+                        <select id="filter-category">
+                            <option value="">All Categories</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="transport">Transport</option>
+                            <option value="bills">Bills & Utilities</option>
+                            <option value="entertainment">Entertainment</option>
+                        </select>
+                        <input type="date" id="filter-date-start">
+                        <input type="date" id="filter-date-end">
+                        <button class="btn-secondary" id="apply-filters">Apply Filters</button>
+                    </div>
+                    <div class="transactions-list" id="all-transactions">
+                        <!-- All transactions populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget Page -->
+            <div class="page-content" id="page-budget">
+                <div class="budget-container">
+                    <div class="budget-cards">
+                        <div class="budget-card">
+                            <div class="budget-header">
+                                <span class="budget-category">Food & Dining</span>
+                                <span class="budget-progress" id="food-progress">75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="food-bar" style="width: 75%"></div>
+                            </div>
+                            <div class="budget-amounts">
+                                <span>$750 / $1,000</span>
+                            </div>
+                        </div>
+                        <div class="budget-card">
+                            <div class="budget-header">
+                                <span class="budget-category">Shopping</span>
+                                <span class="budget-progress" id="shopping-progress">45%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="shopping-bar" style="width: 45%"></div>
+                            </div>
+                            <div class="budget-amounts">
+                                <span>$450 / $1,000</span>
+                            </div>
+                        </div>
+                        <div class="budget-card">
+                            <div class="budget-header">
+                                <span class="budget-category">Transport</span>
+                                <span class="budget-progress" id="transport-progress">30%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="transport-bar" style="width: 30%"></div>
+                            </div>
+                            <div class="budget-amounts">
+                                <span>$150 / $500</span>
+                            </div>
+                        </div>
+                        <div class="budget-card">
+                            <div class="budget-header">
+                                <span class="budget-category">Entertainment</span>
+                                <span class="budget-progress" id="entertainment-progress">90%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress warning" id="entertainment-bar" style="width: 90%"></div>
+                            </div>
+                            <div class="budget-amounts">
+                                <span>$450 / $500</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Page -->
+            <div class="page-content" id="page-accounts">
+                <div class="accounts-container">
+                    <div class="account-card">
+                        <div class="account-icon checking">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="account-details">
+                            <span class="account-name">Main Checking</span>
+                            <span class="account-number">****4521</span>
+                        </div>
+                        <div class="account-balance">
+                            <span class="balance">$12,450.00</span>
+                            <span class="account-type">Checking</span>
+                        </div>
+                    </div>
+                    <div class="account-card">
+                        <div class="account-icon savings">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="account-details">
+                            <span class="account-name">Savings Account</span>
+                            <span class="account-number">****7832</span>
+                        </div>
+                        <div class="account-balance">
+                            <span class="balance">$8,130.00</span>
+                            <span class="account-type">Savings</span>
+                        </div>
+                    </div>
+                    <div class="account-card">
+                        <div class="account-icon investment">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="account-details">
+                            <span class="account-name">Investment Account</span>
+                            <span class="account-number">****9012</span>
+                        </div>
+                        <div class="account-balance">
+                            <span class="balance">$4,000.00</span>
+                            <span class="account-type">Investment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <div class="modal-icon success">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Transfer Successful!</h3>
+            <p id="transfer-details"></p>
+            <button class="btn-primary" id="close-modal">Done</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
