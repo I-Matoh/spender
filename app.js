@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initChart();
     initTransferForm();
     initFilters();
+    initSettings();
 });
 
 // Set Current Date
@@ -80,7 +81,7 @@ function initNavigation() {
             }
         });
     });
-}
+} 
 
 // Initialize Transactions
 function initTransactions() {
@@ -161,19 +162,26 @@ function initChart() {
         window.spendingChart.destroy();
     }
     
+    const spendingData = {
+        food: 235.80,
+        shopping: 180.99,
+        transport: 75.50,
+        bills: 145.00,
+        entertainment: 80.99
+    };
+    
+    const colors = ['#ef4444', '#a855f7', '#3b82f6', '#f59e0b', '#10b981'];
+    const labels = Object.keys(spendingData);
+    const data = Object.values(spendingData);
+    const total = data.reduce((a, b) => a + b, 0);
+    
     window.spendingChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Food', 'Shopping', 'Transport', 'Bills', 'Entertainment'],
+            labels: labels.map(l => l.charAt(0).toUpperCase() + l.slice(1)),
             datasets: [{
-                data: [235, 180, 75, 145, 65],
-                backgroundColor: [
-                    '#ef4444',
-                    '#a855f7',
-                    '#3b82f6',
-                    '#f59e0b',
-                    '#10b981'
-                ],
+                data: data,
+                backgroundColor: colors,
                 borderWidth: 0,
                 hoverOffset: 4
             }]
@@ -195,6 +203,101 @@ function initChart() {
                 }
             },
             cutout: '65%'
+        }
+    });
+    
+    // Populate spending breakdown
+    populateSpendingBreakdown(spendingData, colors, total);
+    
+    // Initialize trend chart
+    initTrendChart();
+}
+
+// Populate Spending Breakdown
+function populateSpendingBreakdown(spendingData, colors, total) {
+    const container = document.getElementById('spending-breakdown');
+    if (!container) return;
+    
+    const entries = Object.entries(spendingData).sort((a, b) => b[1] - a[1]);
+    const colorMap = {
+        food: '#ef4444',
+        shopping: '#a855f7',
+        transport: '#3b82f6',
+        bills: '#f59e0b',
+        entertainment: '#10b981'
+    };
+    
+    container.innerHTML = entries.map(([category, amount]) => {
+        const percentage = ((amount / total) * 100).toFixed(1);
+        return `
+            <div class="breakdown-item">
+                <div class="breakdown-info">
+                    <span class="breakdown-dot" style="background: ${colorMap[category]}"></span>
+                    <span class="breakdown-category">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                </div>
+                <div class="breakdown-values">
+                    <span class="breakdown-amount">$${amount.toFixed(2)}</span>
+                    <span class="breakdown-percent">${percentage}%</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Initialize Trend Chart
+function initTrendChart() {
+    const canvas = document.getElementById('trendChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    if (window.trendChart) {
+        window.trendChart.destroy();
+    }
+    
+    window.trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Spending',
+                data: [420, 380, 510, 290],
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#4f46e5',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e5e7eb'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
         }
     });
 }
@@ -272,6 +375,54 @@ function initFilters() {
                 : '<p style="text-align: center; color: #6b7280; padding: 2rem;">No transactions found</p>';
         });
     }
+}
+
+// Initialize Settings
+function initSettings() {
+    loadSettings();
+    
+    const saveBtn = document.getElementById('save-settings');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveSettings);
+    }
+}
+
+// Load Settings from localStorage
+function loadSettings() {
+    const settings = JSON.parse(localStorage.getItem('finflow-settings')) || {
+        currency: 'USD',
+        language: 'en-US',
+        notifications: true,
+        budgetAlerts: true,
+        twoFactorAuth: false
+    };
+    
+    document.getElementById('setting-currency').value = settings.currency;
+    document.getElementById('setting-language').value = settings.language;
+    document.getElementById('setting-notifications').checked = settings.notifications;
+    document.getElementById('setting-budget-alerts').checked = settings.budgetAlerts;
+    document.getElementById('setting-2fa').checked = settings.twoFactorAuth;
+}
+
+// Save Settings to localStorage
+function saveSettings() {
+    const settings = {
+        currency: document.getElementById('setting-currency').value,
+        language: document.getElementById('setting-language').value,
+        notifications: document.getElementById('setting-notifications').checked,
+        budgetAlerts: document.getElementById('setting-budget-alerts').checked,
+        twoFactorAuth: document.getElementById('setting-2fa').checked
+    };
+    
+    localStorage.setItem('finflow-settings', JSON.stringify(settings));
+    
+    const modal = document.getElementById('success-modal');
+    document.getElementById('transfer-details').textContent = 'Your settings have been saved successfully!';
+    modal.classList.add('active');
+    
+    document.getElementById('close-modal').onclick = () => {
+        modal.classList.remove('active');
+    };
 }
 
 // Export for potential testing

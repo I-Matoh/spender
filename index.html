@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinFlow - Financial Dashboard</title>
+    <title>SPENDER - Financial Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,7 +14,7 @@
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-wallet"></i>
-                <span>FinFlow</span>
+                <span>SPENDER</span>
             </div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active" data-page="dashboard">
@@ -122,11 +122,60 @@
                         <div class="chart-container">
                             <canvas id="spendingChart"></canvas>
                         </div>
+                        <!-- Category Breakdown -->
+                        <div class="spending-breakdown">
+                            <h4>Category Breakdown</h4>
+                            <div class="breakdown-list" id="spending-breakdown">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
                     </div>
                     <div class="recent-transactions">
                         <h3>Recent Transactions</h3>
                         <div class="transaction-list" id="recent-transactions">
                             <!-- Transactions will be populated by JS -->
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Monthly Trends -->
+                <section class="trends-section">
+                    <div class="trend-card">
+                        <h3>Monthly Spending Trend</h3>
+                        <div class="trend-chart-container">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon food">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Top Category</span>
+                                <span class="stat-value" id="top-category">Food</span>
+                                <span class="stat-amount">$235.80</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon avg">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Daily Average</span>
+                                <span class="stat-value" id="daily-avg">$109.33</span>
+                                <span class="stat-amount">This week</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon count">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Transactions</span>
+                                <span class="stat-value" id="tx-count">8</span>
+                                <span class="stat-amount">This month</span>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -268,7 +317,7 @@
                             <span class="balance">$12,450.00</span>
                             <span class="account-type">Checking</span>
                         </div>
-                    </div>
+                    </div> 
                     <div class="account-card">
                         <div class="account-icon savings">
                             <i class="fas fa-piggy-bank"></i>
@@ -295,6 +344,75 @@
                             <span class="account-type">Investment</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- Settings Page -->
+            <div class="page-content" id="page-settings">
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3>General Preferences</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-label">Currency</span>
+                                <span class="setting-desc">Select your preferred currency</span>
+                            </div>
+                            <select id="setting-currency" class="setting-select">
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="JPY">JPY (¥)</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-label">Language</span>
+                                <span class="setting-desc">Choose your display language</span>
+                            </div>
+                            <select id="setting-language" class="setting-select">
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Notifications</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-label">Push Notifications</span>
+                                <span class="setting-desc">Receive transaction alerts</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="setting-notifications">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-label">Budget Alerts</span>
+                                <span class="setting-desc">Get notified when approaching budget limits</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="setting-budget-alerts">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Security</h3>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <span class="setting-label">Two-Factor Authentication</span>
+                                <span class="setting-desc">Add an extra layer of security</span>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="setting-2fa">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="save-settings">Save Settings</button>
                 </div>
             </div>
         </main>
